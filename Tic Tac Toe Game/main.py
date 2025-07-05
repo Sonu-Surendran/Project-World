@@ -4,13 +4,13 @@ root = Tk()
 root.geometry("500x500")
 root.title("Tic Tac Toe")
 
-def played(user_input):
+def played(kt):
     """This function changes the value of 'player_value' variable for each turn"""
 
     #python can only access global variable but it can't make changes unless implicitly mentioned has global variable.
     global player_value
 
-    button = user_input.widget
+    button = kt.widget
     button_num = str(button)
     button_num = button_num[-1]
     
@@ -23,19 +23,54 @@ def played(user_input):
         if player_value == "x":
             button["text"] = "X"
             board_value[button_num] = player_value
+
+            if check_if_winner():
+                winner_label = Label(frame2, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                winner_label.grid(row=3, column=0, columnspan=3)
+
             player_value = "o"
         else:
             button["text"] = "O" 
             board_value[button_num] = player_value
-            player_value = "x"   
 
-        check_if_winner()
+            if check_if_winner():
+                winner_label = Label(frame2, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                winner_label.grid(row=3, column=0, columnspan=3)
+
+            player_value = "x"   
 
 
 def check_if_winner():
+    """This function checks if there is a winner at each step"""
+
+    #checking for winner in all rows
     if board_value[1] == board_value[2] and board_value[3] == board_value[2] and board_value[3] == player_value:
-        print(f"{player_value} won the game")
-        root.quit()
+        return True
+    
+    elif board_value[4] == board_value[5] and board_value[5] == board_value[6] and board_value[6] == player_value:
+        return True
+    
+    elif board_value[7] == board_value[8] and board_value[8] == board_value[9] and board_value[9] == player_value:
+        return True
+    
+    #checking for winner in all columns
+    elif board_value[1] == board_value[4] and board_value[4] == board_value[7] and board_value[7] == player_value:
+        return True
+    
+    elif board_value[2] == board_value[5] and board_value[5] == board_value[8] and board_value[8] == player_value:
+        return True
+    
+    elif board_value[3] == board_value[6] and board_value[6] == board_value[9] and board_value[9] == player_value:
+        return True
+    
+    #checking for winnner in diagonal
+    elif board_value[1] == board_value[5] and board_value[5] == board_value[9] and board_value[9] == player_value:
+        return True
+    
+    elif board_value[3] == board_value[5] and board_value[5] == board_value[7] and board_value[7] == player_value:
+        return True
+
+    return False
         
 
 #To display the title inside the board
