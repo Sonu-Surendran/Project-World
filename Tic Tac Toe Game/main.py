@@ -1,7 +1,7 @@
 from tkinter import *
 
 root = Tk()
-root.geometry("500x600")
+root.geometry("400x600")
 root.title("Tic Tac Toe")
 
 def played(kt):
@@ -26,11 +26,11 @@ def played(kt):
                 board_value[button_num] = player_value
 
                 if check_if_winner(player_value):
-                    winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                    winner_label = Label(frame1, text=f"{player_value.upper()} won the game!!!", font=("Airal", 24), background="lightblue", width=19, height=1)
                     winner_label.grid(row=0, column=0, columnspan=3)
                     move_allowed = False
                 elif check_if_draw():
-                    game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue",width=25)
+                    game_draw_label = Label(frame1, text=f"game draw", font=("Airal", 24), background="lightblue", width=19, height=1)
                     game_draw_label.grid(row=0, column=0, columnspan=3)
 
                 player_value = "o"
@@ -38,11 +38,11 @@ def played(kt):
                 if single_player:
                     computer_play()
                     if check_if_winner(player_value):
-                        winner_label = Label(frame1, text=f"computer has won the game!!!", font=("Airal", 25), background="lightblue")
+                        winner_label = Label(frame1, text=f"computer won!!!", font=("Airal", 24), background="lightblue", width=19, height=1)
                         winner_label.grid(row=0, column=0, columnspan=3)
                         move_allowed = False
                     elif check_if_draw():
-                        game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
+                        game_draw_label = Label(frame1, text=f"game draw", font=("Airal", 24), background="lightblue", width=19, height=1)
                         game_draw_label.grid(row=0, column=0, columnspan=3)
                     print(board_value)
                     computer_board_update()
@@ -52,11 +52,11 @@ def played(kt):
                 board_value[button_num] = player_value
 
                 if check_if_winner(player_value):
-                    winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                    winner_label = Label(frame1, text=f"{player_value.upper()} won the game!!!", font=("Airal", 24), background="lightblue", width=19, height=1)
                     winner_label.grid(row=0, column=0, columnspan=3)
                     move_allowed = False
                 elif check_if_draw():
-                    game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
+                    game_draw_label = Label(frame1, text=f"game draw", font=("Airal", 24), background="lightblue", width=19, height=1)
                     game_draw_label.grid(row=0, column=0, columnspan=3)
 
                 player_value = "x"   
@@ -116,15 +116,11 @@ def restart_game():
     for key in board_value:
         board_value[key] = " "
 
-    titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue", width=25)
+    titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 24"), bg="lightblue", width=19, height=1)
     titlelabel1.grid(row=0, column=0, columnspan=3)
 
     move_allowed = True
 
-    try:
-        board_value.__delitem__(0)
-    except:
-        pass
 
 
 def computer_play():
@@ -143,7 +139,8 @@ def computer_play():
                 best_score = score
                 best_move = key
 
-    board_value[best_move] = "o"
+    if best_move in board_value:
+        board_value[best_move] = "o"
 
 
 def minmax(current_board, is_computer_turn):
@@ -160,10 +157,10 @@ def minmax(current_board, is_computer_turn):
     if is_computer_turn:
         best_score = -100
 
-        for key in board_value:
-            if board_value[key] == " ":
-                board_value[key] = "o"
-                score = minmax(board_value, False)
+        for key in current_board:
+            if current_board[key] == " ":
+                current_board[key] = "o"
+                score = minmax(current_board, False)
                 board_value[key] = " "
 
                 if score > best_score:
@@ -174,11 +171,11 @@ def minmax(current_board, is_computer_turn):
     else:
         best_score = 100
 
-        for key in board_value:
-            if board_value[key] == " ":
-                board_value[key] = "x"
-                score = minmax(board_value, True)
-                board_value[key] = " "
+        for key in current_board:
+            if current_board[key] == " ":
+                current_board[key] = "x"
+                score = minmax(current_board, True)
+                current_board[key] = " "
 
                 if score < best_score:
                     best_score = score
@@ -196,7 +193,7 @@ def computer_board_update():
 #To display the title inside the board
 frame1 = Frame(root)
 frame1.pack()
-titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue", width=25)
+titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 24"), bg="lightblue", width=19, height=1)
 titlelabel1.grid(row=0, column=0, columnspan=3)
 
 #virtual space where tic tac toe board will be contained
@@ -214,6 +211,8 @@ board_value = {1: " ", 2: " ", 3:" ",
 
 
 single_player = True
+
+# No Changes further ---------------------*********************-----------------------------------------------
 
 #create button for all 3 columns and 3 rows
 
@@ -260,7 +259,7 @@ print(type(button2))
 #creating a list to store all the button variable for restart function
 all_buttons = [button1, button2, button3, button4, button5, button6, button7, button8, button9]
 
-restart_button = Button(frame2, text = "restart game", width=12, height=1, font=("Airal, 23"), bg="lightgreen", relief=RAISED, borderwidth=5, command=restart_game)
+restart_button = Button(frame2, text = "restart game".title(), width=19, height=1, font=("Airal, 23"), bg="lightgreen", relief=RAISED, borderwidth=5, command=restart_game)
 restart_button.grid(row=3, column=0, columnspan=3)
 
 
