@@ -25,7 +25,7 @@ def played(kt):
                 button["text"] = "X"
                 board_value[button_num] = player_value
 
-                if check_if_winner():
+                if check_if_winner(player_value):
                     winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
                     winner_label.grid(row=0, column=0, columnspan=3)
                     move_allowed = False
@@ -34,11 +34,23 @@ def played(kt):
                     game_draw_label.grid(row=0, column=0, columnspan=3)
 
                 player_value = "o"
+
+                computer_play()
+                # if check_if_winner(player_value):
+                #     winner_label = Label(frame1, text=f"computer has won the game!!!", font=("Airal", 25), background="lightblue")
+                #     winner_label.grid(row=0, column=0, columnspan=3)
+                #     move_allowed = False
+                # elif check_if_draw():
+                #     game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
+                #     game_draw_label.grid(row=0, column=0, columnspan=3)
+                print(board_value)
+
+                player_value = "x"
             else:
                 button["text"] = "O" 
                 board_value[button_num] = player_value
 
-                if check_if_winner():
+                if check_if_winner(player_value):
                     winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
                     winner_label.grid(row=0, column=0, columnspan=3)
                     move_allowed = False
@@ -49,7 +61,7 @@ def played(kt):
                 player_value = "x"   
 
 
-def check_if_winner():
+def check_if_winner(player_value):
     """This function checks if there is a winner at each step"""
 
     #checking for winner in all rows
@@ -107,6 +119,65 @@ def restart_game():
     titlelabel1.grid(row=0, column=0, columnspan=3)
 
     move_allowed = True
+
+
+def computer_play():
+    """This function uses minmax algorithm to find the best possible move"""
+
+    best_score = -100
+    best_move = 0
+
+    for key in board_value:
+        if board_value[key] == " ":
+            board_value[key] = "o"
+            score = minmax(board_value, False)
+            board_value[key] = " "
+
+            if score > best_score:
+                best_score = score
+                best_move = key
+
+    board_value[best_move] = "o"
+
+
+def minmax(current_board, is_computer_turn):
+
+    if check_if_winner('o'):
+        return 1
+    
+    elif check_if_winner("x"):
+        return -1
+    
+    elif check_if_draw():
+        return 0
+    
+    if is_computer_turn:
+        best_score = -100
+
+        for key in board_value:
+            if board_value[key] == " ":
+                board_value[key] = "o"
+                score = minmax(board_value, False)
+                board_value[key] = " "
+
+                if score > best_score:
+                    best_score = score
+
+        return best_score
+    
+    else:
+        best_score = 100
+
+        for key in board_value:
+            if board_value[key] == " ":
+                board_value[key] = "x"
+                score = minmax(board_value, True)
+                board_value[key] = " "
+
+                if score < best_score:
+                    best_score = score
+
+        return best_score
 
 
 #To display the title inside the board
