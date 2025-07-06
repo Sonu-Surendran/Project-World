@@ -1,7 +1,7 @@
 from tkinter import *
 
 root = Tk()
-root.geometry("500x500")
+root.geometry("500x600")
 root.title("Tic Tac Toe")
 
 def played(kt):
@@ -25,8 +25,11 @@ def played(kt):
             board_value[button_num] = player_value
 
             if check_if_winner():
-                winner_label = Label(frame2, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
-                winner_label.grid(row=3, column=0, columnspan=3)
+                winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                winner_label.grid(row=0, column=0, columnspan=3)
+            elif check_if_draw():
+                game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue")
+                game_draw_label.grid(row=0, column=0, columnspan=3)
 
             player_value = "o"
         else:
@@ -34,9 +37,12 @@ def played(kt):
             board_value[button_num] = player_value
 
             if check_if_winner():
-                winner_label = Label(frame2, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
-                winner_label.grid(row=3, column=0, columnspan=3)
-
+                winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                winner_label.grid(row=0, column=0, columnspan=3)
+            elif check_if_draw():
+                game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue")
+                game_draw_label.grid(row=0, column=0, columnspan=3)
+                
             player_value = "x"   
 
 
@@ -71,13 +77,22 @@ def check_if_winner():
         return True
 
     return False
+
+
+def check_if_draw():
+    """This function checks if all the keys have value (X or O)"""
+
+    for key in board_value.keys():
+        if board_value[key] == " ":
+            return False
+    return True
         
 
 #To display the title inside the board
 frame1 = Frame(root)
 frame1.pack()
-titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 18"), bg="lightblue")
-titlelabel1.pack()
+titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue")
+titlelabel1.grid(row=0, column=0, columnspan=3)
 
 #virtual space where tic tac toe board will be contained
 frame2 = Frame(root)
@@ -131,6 +146,9 @@ button8.bind("<Button-1>", played)
 button9 = Button(frame2, text = " ", width=4, height=2, font=("Airal, 32"), bg="silver", relief=RAISED, borderwidth=5)
 button9.grid(row=2, column=2)
 button9.bind("<Button-1>", played)
+
+restart_button = Button(frame2, text = "restart game", width=12, height=1, font=("Airal, 23"), bg="lightgreen", relief=RAISED, borderwidth=5)
+restart_button.grid(row=3, column=0, columnspan=3)
 
 
 root.mainloop()
