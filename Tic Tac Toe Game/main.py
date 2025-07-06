@@ -22,7 +22,7 @@ def played(kt):
 
         if button["text"] == " ":
             if player_value == "x":
-                button["text"] = "X"
+                # button["text"] = "X"
                 board_value[button_num] = player_value
 
                 if check_if_winner(player_value):
@@ -35,17 +35,18 @@ def played(kt):
 
                 player_value = "o"
 
-                computer_play()
-                # if check_if_winner(player_value):
-                #     winner_label = Label(frame1, text=f"computer has won the game!!!", font=("Airal", 25), background="lightblue")
-                #     winner_label.grid(row=0, column=0, columnspan=3)
-                #     move_allowed = False
-                # elif check_if_draw():
-                #     game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
-                #     game_draw_label.grid(row=0, column=0, columnspan=3)
-                print(board_value)
-
-                player_value = "x"
+                if single_player:
+                    computer_play()
+                    if check_if_winner(player_value):
+                        winner_label = Label(frame1, text=f"computer has won the game!!!", font=("Airal", 25), background="lightblue")
+                        winner_label.grid(row=0, column=0, columnspan=3)
+                        move_allowed = False
+                    elif check_if_draw():
+                        game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
+                        game_draw_label.grid(row=0, column=0, columnspan=3)
+                    print(board_value)
+                    computer_board_update()
+                    player_value = "x"
             else:
                 button["text"] = "O" 
                 board_value[button_num] = player_value
@@ -120,6 +121,11 @@ def restart_game():
 
     move_allowed = True
 
+    try:
+        board_value.__delitem__(0)
+    except:
+        pass
+
 
 def computer_play():
     """This function uses minmax algorithm to find the best possible move"""
@@ -180,6 +186,13 @@ def minmax(current_board, is_computer_turn):
         return best_score
 
 
+def computer_board_update():
+    """This function update board when computer plays the game"""
+
+    for key in board_value:
+        all_buttons[key-1]["text"] = board_value.get(key)
+
+
 #To display the title inside the board
 frame1 = Frame(root)
 frame1.pack()
@@ -198,6 +211,9 @@ move_allowed = True
 board_value = {1: " ", 2: " ", 3:" ",
                4: " ", 5: " ", 6:" ",
                7: " ", 8: " ", 9:" "}
+
+
+single_player = True
 
 #create button for all 3 columns and 3 rows
 
