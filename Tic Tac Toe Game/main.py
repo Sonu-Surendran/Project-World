@@ -8,42 +8,45 @@ def played(kt):
     """This function changes the value of 'player_value' variable for each turn"""
 
     #python can only access global variable but it can't make changes unless implicitly mentioned has global variable.
-    global player_value
-
-    button = kt.widget
-    button_num = str(button)
-    button_num = button_num[-1]
+    global player_value, move_allowed
     
-    if button_num == "n":
-        button_num = 1
-    else:
-        button_num = int(button_num)
-
-    if button["text"] == " ":
-        if player_value == "x":
-            button["text"] = "X"
-            board_value[button_num] = player_value
-
-            if check_if_winner():
-                winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
-                winner_label.grid(row=0, column=0, columnspan=3)
-            elif check_if_draw():
-                game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue")
-                game_draw_label.grid(row=0, column=0, columnspan=3)
-
-            player_value = "o"
+    if move_allowed:
+        button = kt.widget
+        button_num = str(button)
+        button_num = button_num[-1]
+        
+        if button_num == "n":
+            button_num = 1
         else:
-            button["text"] = "O" 
-            board_value[button_num] = player_value
+            button_num = int(button_num)
 
-            if check_if_winner():
-                winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
-                winner_label.grid(row=0, column=0, columnspan=3)
-            elif check_if_draw():
-                game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue")
-                game_draw_label.grid(row=0, column=0, columnspan=3)
-                
-            player_value = "x"   
+        if button["text"] == " ":
+            if player_value == "x":
+                button["text"] = "X"
+                board_value[button_num] = player_value
+
+                if check_if_winner():
+                    winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                    winner_label.grid(row=0, column=0, columnspan=3)
+                    move_allowed = False
+                elif check_if_draw():
+                    game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue",width=25)
+                    game_draw_label.grid(row=0, column=0, columnspan=3)
+
+                player_value = "o"
+            else:
+                button["text"] = "O" 
+                board_value[button_num] = player_value
+
+                if check_if_winner():
+                    winner_label = Label(frame1, text=f"{player_value.upper()} has won the game!!!", font=("Airal", 25), background="lightblue")
+                    winner_label.grid(row=0, column=0, columnspan=3)
+                    move_allowed = False
+                elif check_if_draw():
+                    game_draw_label = Label(frame1, text=f"the game is a draw", font=("Airal", 25), background="lightblue", width=25)
+                    game_draw_label.grid(row=0, column=0, columnspan=3)
+
+                player_value = "x"   
 
 
 def check_if_winner():
@@ -88,10 +91,28 @@ def check_if_draw():
     return True
         
 
+def restart_game():
+    """Function restarts the game"""
+
+    global player_value, move_allowed
+    player_value = "x"
+
+    for button in all_buttons:
+        button["text"] = " "
+
+    for key in board_value:
+        board_value[key] = " "
+
+    titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue", width=25)
+    titlelabel1.grid(row=0, column=0, columnspan=3)
+
+    move_allowed = True
+
+
 #To display the title inside the board
 frame1 = Frame(root)
 frame1.pack()
-titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue")
+titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 25"), bg="lightblue", width=25)
 titlelabel1.grid(row=0, column=0, columnspan=3)
 
 #virtual space where tic tac toe board will be contained
@@ -100,6 +121,7 @@ frame2.pack()
 
 #This variable keeps track of the turn value (O or X)
 player_value = "x"
+move_allowed = True
 
 #Dictionary which keeps track of the position occupied.
 board_value = {1: " ", 2: " ", 3:" ",
@@ -146,8 +168,12 @@ button8.bind("<Button-1>", played)
 button9 = Button(frame2, text = " ", width=4, height=2, font=("Airal, 32"), bg="silver", relief=RAISED, borderwidth=5)
 button9.grid(row=2, column=2)
 button9.bind("<Button-1>", played)
+print(type(button2))
 
-restart_button = Button(frame2, text = "restart game", width=12, height=1, font=("Airal, 23"), bg="lightgreen", relief=RAISED, borderwidth=5)
+#creating a list to store all the button variable for restart function
+all_buttons = [button1, button2, button3, button4, button5, button6, button7, button8, button9]
+
+restart_button = Button(frame2, text = "restart game", width=12, height=1, font=("Airal, 23"), bg="lightgreen", relief=RAISED, borderwidth=5, command=restart_game)
 restart_button.grid(row=3, column=0, columnspan=3)
 
 
