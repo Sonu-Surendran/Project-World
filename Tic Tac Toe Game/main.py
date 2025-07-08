@@ -4,6 +4,8 @@ root = Tk()
 root.geometry("400x600")
 root.title("Tic Tac Toe")
 
+single_player = False
+
 def played(kt):
     """This function changes the value of 'player_value' variable for each turn"""
 
@@ -22,7 +24,7 @@ def played(kt):
 
         if button["text"] == " ":
             if player_value == "x":
-                # button["text"] = "X"
+                button["text"] = "X"
                 board_value[button_num] = player_value
 
                 if check_if_winner(player_value):
@@ -44,7 +46,6 @@ def played(kt):
                     elif check_if_draw():
                         game_draw_label = Label(frame1, text=f"game draw", font=("Airal", 24), background="lightblue", width=19, height=1)
                         game_draw_label.grid(row=0, column=0, columnspan=3)
-                    print(board_value)
                     computer_board_update()
                     player_value = "x"
             else:
@@ -139,6 +140,8 @@ def computer_play():
                 best_score = score
                 best_move = key
 
+    print(best_move)
+
     if best_move in board_value:
         board_value[best_move] = "o"
 
@@ -187,14 +190,28 @@ def computer_board_update():
     """This function update board when computer plays the game"""
 
     for key in board_value:
-        all_buttons[key-1]["text"] = board_value.get(key)
+        all_buttons[key-1]["text"] = board_value.get(key).upper()
 
+
+def single_player_mode():
+    global single_player
+    single_player = True
+
+def multipler_player_mode():
+    global single_player
+    single_player = False
 
 #To display the title inside the board
 frame1 = Frame(root)
 frame1.pack()
 titlelabel1 = Label(frame1, text="Tic Tac Toe", font=("Airal, 24"), bg="lightblue", width=19, height=1)
 titlelabel1.grid(row=0, column=0, columnspan=3)
+
+single_player_button = Button(frame1, text = "Single Player".title(), width=19, height=1, font=("Airal, 12"), bg="lightgreen", relief=RAISED, borderwidth=5, command=single_player_mode)
+single_player_button.grid(row=1, column=0)
+
+multiple_player_button = Button(frame1, text = "Mutli player".title(), width=19, height=1, font=("Airal, 12"), bg="lightgreen", relief=RAISED, borderwidth=5, command=multipler_player_mode)
+multiple_player_button.grid(row=1, column=1)
 
 #virtual space where tic tac toe board will be contained
 frame2 = Frame(root)
@@ -209,8 +226,6 @@ board_value = {1: " ", 2: " ", 3:" ",
                4: " ", 5: " ", 6:" ",
                7: " ", 8: " ", 9:" "}
 
-
-single_player = True
 
 # No Changes further ---------------------*********************-----------------------------------------------
 
@@ -254,7 +269,6 @@ button8.bind("<Button-1>", played)
 button9 = Button(frame2, text = " ", width=4, height=2, font=("Airal, 32"), bg="silver", relief=RAISED, borderwidth=5)
 button9.grid(row=2, column=2)
 button9.bind("<Button-1>", played)
-print(type(button2))
 
 #creating a list to store all the button variable for restart function
 all_buttons = [button1, button2, button3, button4, button5, button6, button7, button8, button9]
