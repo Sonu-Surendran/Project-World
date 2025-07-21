@@ -28,7 +28,6 @@ class Ship:
         """Update the position of the ship based on the movenment flag"""
 
         if self.movement_right and self.image_rect.right < self.screen_rect.right:
-            print(self.screen_rect.right)
             self.float_position += self.settings.ship_speed
         if self.movement_left and self.image_rect.left > 0:
             self.float_position -= self.settings.ship_speed

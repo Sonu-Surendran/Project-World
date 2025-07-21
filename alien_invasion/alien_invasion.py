@@ -13,7 +13,9 @@ class AlienInvasion:
         self.settings = Settings()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode(
-            (self.settings.screen_width, self.settings.screen_height))
+            (0,0), pygame.FULLSCREEN)
+        self.settings.screen_width = self.screen.get_rect().width
+        self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)
@@ -35,15 +37,9 @@ class AlienInvasion:
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    self.ship.movement_right = True
-                elif event.key == pygame.K_LEFT:
-                    self.ship.movement_left = True
+                self._check_keydown_event(event)
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    self.ship.movement_right = False
-                elif event.key == pygame.K_LEFT:
-                    self.ship.movement_left = False         
+                self._check_keyrelease_event(event)
 
     def _update_screen(self):
         """update the screen with latest drawings"""
@@ -53,6 +49,23 @@ class AlienInvasion:
         #Make the most recently drawn screen visible
         pygame.display.flip()
 
+    def _check_keydown_event(self, event):
+        """Responses to keypress"""
+
+        if event.key == pygame.K_RIGHT:
+            self.ship.movement_right = True
+        elif event.key == pygame.K_LEFT:
+            self.ship.movement_left = True
+        elif event.key == pygame.K_q:
+                sys.exit()
+
+    def _check_keyrelease_event(self, event):
+        """Responses to key release"""
+
+        if event.key == pygame.K_RIGHT:
+            self.ship.movement_right = False
+        elif event.key == pygame.K_LEFT:
+            self.ship.movement_left = False   
 
 if __name__ == '__main__':
     #Make a game instance and run the game
