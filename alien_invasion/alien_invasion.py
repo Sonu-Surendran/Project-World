@@ -3,6 +3,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion:
     """Overall Class to manage game assets and behavior."""
@@ -19,6 +20,7 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
 
         #Set the background colour
         self.bg_color = (self.settings.bg_color)
@@ -28,6 +30,7 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
+            self._update_bullet()
             self._update_screen()
             self.clock.tick(60)
 
@@ -45,9 +48,21 @@ class AlienInvasion:
         """update the screen with latest drawings"""
 
         self.screen.fill(self.bg_color)
-        self.ship.blitme()   
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+        self.ship.blitme()  
         #Make the most recently drawn screen visible
         pygame.display.flip()
+
+    def _update_bullet(self):
+        """Update the position of bullets and get rid of the old bullets"""
+
+        self.bullets.update() 
+
+        for bullet in self.bullets.copy():
+            if bullet.bullet_rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        print(len(self.bullets))
 
     def _check_keydown_event(self, event):
         """Responses to keypress"""
@@ -58,6 +73,8 @@ class AlienInvasion:
             self.ship.movement_left = True
         elif event.key == pygame.K_q:
                 sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
 
     def _check_keyrelease_event(self, event):
         """Responses to key release"""
@@ -65,7 +82,15 @@ class AlienInvasion:
         if event.key == pygame.K_RIGHT:
             self.ship.movement_right = False
         elif event.key == pygame.K_LEFT:
-            self.ship.movement_left = False   
+            self.ship.movement_left = False 
+
+    def _fire_bullet(self):
+        """"Generate bullet for each keystroke"""
+
+        if self.settings.allowed_bullets >= len(self.bullets):
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)  
+
 
 if __name__ == '__main__':
     #Make a game instance and run the game
